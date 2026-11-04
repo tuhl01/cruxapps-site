@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crux Apps</title>
+<meta name="description" content="Crux Apps — embedded vision and motion systems by Tom Uhl, San Diego. Featured project: Sentry, a computer-vision water turret with no wires on its moving head.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single-column engineering notebook — field-kit palette (olive drab, tan, gunmetal) on drafting-paper neutrals; spec sheets in mono */
+:root{
+  --bg:#eceee8;          /* drafting-paper gray-green */
+  --surface:#f7f8f4;
+  --ink:#1f2427;         /* gunmetal */
+  --muted:#5a625f;
+  --line:#c9cec4;
+  --olive:#545b2e;       /* olive drab accent */
+  --tan:#9c7f4f;         /* tan secondary */
+  --sheet:#ffffff;       /* CAD drawings keep a white sheet in both themes */
+  --f-display:"Chakra Petch","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --measure:64ch;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#15181a; --surface:#1c2023; --ink:#e4e6df; --muted:#9aa29c; --line:#2f3539;
+  --olive:#a3ad66; --tan:#c9a874; --sheet:#f2f3ef; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15181a; --surface:#1c2023; --ink:#e4e6df; --muted:#9aa29c; --line:#2f3539;
+  --olive:#a3ad66; --tan:#c9a874; --sheet:#f2f3ef; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%;display:block}
+a{color:var(--olive);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--tan);outline-offset:3px}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.08;text-wrap:balance;margin:0}
+h2{font-size:clamp(28px,4vw,40px)}
+h3{font-size:20px}
+p{margin:0;max-width:var(--measure)}
+.label{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--tan)}
+
+/* header */
+header.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:22px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:.04em;color:var(--ink);text-decoration:none}
+.brand svg{width:26px;height:26px}
+nav{display:flex;gap:22px;flex-wrap:wrap}
+nav a{color:var(--muted);text-decoration:none;font-size:15px}
+nav a:hover{color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px;align-items:center;padding-block:64px 56px}
+.hero h1{font-size:clamp(40px,6.2vw,74px);letter-spacing:-.01em}
+.hero h1 em{font-style:normal;color:var(--olive)}
+.hero .lede{margin-top:20px;font-size:19px;color:var(--muted)}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{display:inline-block;padding:12px 18px;border-radius:3px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid var(--ink)}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.btn.ghost{color:var(--ink)}
+.sheet{background:var(--sheet);border:1px solid var(--line);border-radius:4px;position:relative}
+.sheet img{width:100%;height:auto}
+.sheet .tb{position:absolute;right:10px;bottom:10px;font-family:var(--f-mono);font-size:11px;color:#4b524f;background:rgba(255,255,255,.85);border:1px solid #c9cec4;padding:4px 8px;line-height:1.4}
+
+section{padding-block:72px;border-top:1px solid var(--line)}
+.sec-head{display:grid;gap:12px;margin-bottom:36px}
+
+/* project */
+.thesis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;margin-top:8px}
+.thesis div{display:grid;gap:8px;align-content:start;min-width:0}
+.thesis .n{font-family:var(--f-mono);font-size:13px;color:var(--olive)}
+.thesis p{color:var(--muted);font-size:16px}
+
+.figure-row{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px;margin-top:44px;align-items:start}
+figcaption{font-size:14px;color:var(--muted);margin-top:10px}
+
+/* spec sheet */
+.spec{width:100%;border-collapse:collapse;font-size:15px}
+.spec th,.spec td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.spec th{font-weight:500;color:var(--muted);width:42%}
+.spec td{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums}
+.spec-box{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:6px 6px 2px}
+.spec-box h3{padding:10px 12px 4px}
+
+/* media slots */
+.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:40px}
+.slot{margin:0}
+.slot .frame{aspect-ratio:4/3;max-width:100%;border:1.5px dashed var(--line);border-radius:4px;background:
+  repeating-linear-gradient(135deg,transparent 0 10px,color-mix(in srgb,var(--line) 35%,transparent) 10px 11px);
+  display:grid;place-items:center;padding:16px;text-align:center}
+.slot.wide{grid-column:span 2}
+.slot.wide .frame{aspect-ratio:16/9}
+.slot .frame span{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;color:var(--muted);max-width:28ch}
+.slot .frame b{display:block;color:var(--tan);font-weight:500;margin-bottom:6px;letter-spacing:.12em}
+
+/* build log */
+.log{display:grid;gap:0;margin-top:8px}
+.log li{display:grid;grid-template-columns:120px minmax(0,1fr);gap:20px;padding:16px 0;border-bottom:1px solid var(--line)}
+.log ol{list-style:none;margin:0;padding:0}
+.log time{font-family:var(--f-mono);font-size:13px;color:var(--olive)}
+.log p{color:var(--muted);font-size:16px}
+.log h3{font-size:18px;margin-bottom:4px}
+
+/* services */
+.services{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
+.services div{padding:24px 24px 24px 0;border-bottom:1px solid var(--line);display:grid;gap:8px;min-width:0}
+.services div:nth-child(odd){border-right:1px solid var(--line)}
+.services div:nth-child(even){padding-left:24px}
+.services p{color:var(--muted);font-size:16px}
+.tags{font-family:var(--f-mono);font-size:12px;color:var(--tan)}
+
+/* contact */
+.contact{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:end}
+.contact .addr{font-family:var(--f-mono);font-size:18px;user-select:all;background:var(--surface);border:1px solid var(--line);padding:12px 16px;border-radius:3px}
+footer{padding-block:32px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.todo{background:color-mix(in srgb,var(--tan) 18%,transparent);border-bottom:1px dashed var(--tan);padding:0 2px}
+
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr;gap:32px;padding-block:40px}
+  .thesis{grid-template-columns:1fr}
+  .figure-row{grid-template-columns:1fr}
+  .gallery{grid-template-columns:1fr 1fr}
+  .slot.wide{grid-column:1/-1}
+  .services{grid-template-columns:1fr}
+  .services div:nth-child(odd){border-right:0}
+  .services div:nth-child(even){padding-left:0}
+  .contact{grid-template-columns:1fr}
+  .log li{grid-template-columns:1fr;gap:4px}
+  nav{gap:14px}
+}
+@media (max-width:480px){.gallery{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#top" aria-label="Crux Apps home">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M16 3v8M16 21v8M3 16h8M21 16h8" stroke="currentColor" stroke-width="2.4"/>
+        <circle cx="16" cy="16" r="2.6" fill="var(--olive)"/>
+      </svg>
+      CRUX APPS
+    </a>
+    <nav aria-label="Primary">
+      <a href="#sentry">Sentry</a>
+      <a href="#build">Build log</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <div class="hero">
+      <div>
+        <p class="label">Embedded vision · motion control · San Diego</p>
+        <h1>Machines that <em>see</em>, decide, and move.</h1>
+        <p class="lede">Crux Apps builds embedded Linux and computer-vision systems, from camera pipeline to motor driver. The current flagship is Sentry: a garden-hose turret that finds its target and fires, with no wires on the moving head.</p>
+        <div class="cta">
+          <a class="btn primary" href="#sentry">See the Sentry build</a>
+          <a class="btn ghost" href="#contact">Work with me</a>
+        </div>
+      </div>
+      <figure class="sheet" style="margin:0">
+        <img src="assets/turret-render.webp" width="1093" height="1144" alt="CAD render of the Sentry turret: a square base with two stepper motors underneath, coaxial drive tubes, and a nozzle on a tilting yoke.">
+        <span class="tb">SENTRY · REV B · CAD</span>
+      </figure>
+    </div>
+
+    <section id="sentry">
+      <div class="sec-head">
+        <p class="label">Featured project</p>
+        <h2>Sentry: a 360° water turret</h2>
+        <p>Sentry watches the yard with a pair of wide-angle cameras, picks out animals with an on-device neural network, and puts a jet of water on them. The motors stay in the base, so it can spin forever with no slip ring and no electronics on the turret head.</p>
+      </div>
+
+      <div class="thesis">
+        <div><span class="n">01 / SEE</span><h3>360° vision</h3><p>Two back-to-back fisheye cameras on a Raspberry Pi 5 with an AI accelerator cover every direction, day and night.</p></div>
+        <div><span class="n">02 / AIM</span><h3>Coaxial differential drive</h3><p>Nested tubes carry azimuth and elevation up the center. The firmware mixes both motors, so the head needs no power or data.</p></div>
+        <div><span class="n">03 / FIRE</span><h3>Pulsed water</h3><p>A fast solenoid valve chops mains-pressure water into short, high-speed slugs and fires on the CV system's command.</p></div>
+      </div>
+
+      <div class="figure-row">
+        <figure class="sheet" style="margin:0">
+          <img src="assets/turret-cutaway.webp" width="1400" height="1046" loading="lazy" alt="Labeled CAD cutaway of the Sentry turret showing the inner elevation tube, outer azimuth tube, bevel gears, motors and the water tube up the center.">
+          <span class="tb">CUTAWAY · COAXIAL STACK</span>
+        </figure>
+        <div class="spec-box">
+          <h3>Spec sheet</h3>
+          <table class="spec">
+            <tr><th>Azimuth travel</th><td>Continuous (∞)</td></tr>
+            <tr><th>Elevation</th><td>−15° to +60°</td></tr>
+            <tr><th>Drive</th><td>2 × NEMA 17, 2:3 gearing</td></tr>
+            <tr><th>Resolution</th><td>3.333 steps/° (1/4 µstep)</td></tr>
+            <tr><th>Kinematics</th><td>Marlin MARKFORGED_YX</td></tr>
+            <tr><th>Controller</th><td>BTT SKR Mini E3 V2.0</td></tr>
+            <tr><th>Vision</th><td>Raspberry Pi 5, 2 × 200°+ cameras</td></tr>
+            <tr><th>Water</th><td>60 psi mains, 2 mm jet, ~25 m/s</td></tr>
+            <tr><th>Head wiring</th><td>None</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="gallery" aria-label="Photo and video gallery">
+        <!-- MEDIA SLOTS: replace each .frame div with
+             <img src="assets/your-photo.webp" alt="..."> or
+             <video src="assets/clip.mp4" controls playsinline muted preload="metadata" poster="assets/clip-poster.webp"></video>
+             For long videos, use a YouTube/Vimeo embed iframe on the live site instead. -->
+        <figure class="slot wide">
+          <div class="frame"><span><b>VIDEO</b>Hero clip: Sentry tracks a target and fires a burst (10–20 s, slow-motion if possible)</span></div>
+          <figcaption>Tracking and firing in the yard.</figcaption>
+        </figure>
+        <figure class="slot">
+          <div class="frame"><span><b>PHOTO</b>Finished turret, three-quarter view, outdoors</span></div>
+          <figcaption>The production build.</figcaption>
+        </figure>
+        <figure class="slot">
+          <div class="frame"><span><b>PHOTO</b>The base opened up: motors, gears, SKR board</span></div>
+          <figcaption>Everything that moves lives in the base.</figcaption>
+        </figure>
+        <figure class="slot">
+          <div class="frame"><span><b>SCREEN</b>Detection view: fisheye frame with bounding boxes</span></div>
+          <figcaption>What Sentry sees.</figcaption>
+        </figure>
+        <figure class="slot">
+          <div class="frame"><span><b>VIDEO</b>Slow-motion close-up of a water "bullet" leaving the nozzle</span></div>
+          <figcaption>Pulsed jet at ~25 m/s.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="build">
+      <div class="sec-head">
+        <p class="label">Build log</p>
+        <h2>How it got here</h2>
+      </div>
+      <div class="log">
+        <ol>
+          <li><time>Rev A</time><div><h3>Slip-ring prototype</h3><p>The first version put the elevation motor on the turret head and fed it power and data through a slip ring. It worked, but the slip ring was the weak point.</p></div></li>
+          <li><time>Rev B</time><div><h3>Motors move to the base</h3><p>A coaxial differential replaced the slip ring. The inner tube drives elevation through bevel gears, and firmware compensates for azimuth, so the head carries no electronics.</p></div></li>
+          <li><time>Water path</time><div><h3>No rotary unions</h3><p>A single flexible tube runs up the center and loops into the nozzle, removing two leak points.</p></div></li>
+          <li><time>Motion</time><div><h3>Printer firmware, turret kinematics</h3><p>Marlin on a 3D-printer controller board, configured with Markforged kinematics so G-code speaks azimuth and elevation directly.</p></div></li>
+          <li><time>Next</time><div><h3><span class="todo">Add your latest milestone here</span></h3><p>Night vision, fisheye dewarping, target lead for moving animals…</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="sec-head">
+        <p class="label">Services</p>
+        <h2>What Crux Apps builds</h2>
+        <p>Independent engineering for products that need cameras, compute and motion to work together in the field.</p>
+      </div>
+      <div class="services">
+        <div><h3>Embedded Linux on NVIDIA Jetson</h3><p>Production embedded Linux on Jetson Xavier and Orin, including ConnectTech Rogue carrier boards.</p><span class="tags">Jetson · Linux · Docker</span></div>
+        <div><h3>Camera and vision pipelines</h3><p>Camera capture and processing pipelines with on-device detection and tracking.</p><span class="tags">Cameras · Python · Computer vision</span></div>
+        <div><h3>Kiosk and instrument systems</h3><p>Kiosk-style instrument systems that boot straight into the app and keep running in the field.</p><span class="tags">Python · PySide6 · Embedded Linux</span></div>
+        <div><h3>Fleet management and backends</h3><p>Managing fleets of deployed devices, and the Django services behind them.</p><span class="tags">Django · Docker · Fleet management</span></div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact">
+        <div class="sec-head" style="margin:0">
+          <p class="label">Contact</p>
+          <h2>Have a machine that needs eyes?</h2>
+          <p>Tell me about the hardware, the camera and what it has to do. <span class="todo">Add your response-time promise.</span></p>
+        </div>
+        <div class="addr" title="Select to copy"><span class="todo">hello@cruxapps.com</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 Crux Apps · San Diego, California</span>
+    <span>Built by Tom Uhl</span>
+  </footer>
+</div>
+
+</body>
+</html>
